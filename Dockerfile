@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         curl \
         rsync \
         vim \
+        git \
         expect \
         terminator \
         bash-completion \
@@ -25,18 +26,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-wheel \
         python3-dev \
         python3-venv \
+        python3-numpy \
+        python3-scipy \
         pkg-config \
     && rm -rf /var/lib/apt/lists/*
-
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#         libblas-dev liblapack-dev libatlas-base-dev \
-#         gfortran \
-#     && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install \
-    numpy
-    # \
-    # scipy
 
 # install pytorch 1.1.0
 # https://devtalk.nvidia.com/default/topic/1049071/jetson-nano/pytorch-for-jetson-nano/
@@ -45,10 +38,6 @@ RUN pip3 install \
 RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.whl -O /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl \
     && pip3 install /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl \
     && rm /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        git \
-    && rm -rf /var/lib/apt/lists/*
 
 # torchvision
 # TODO: needs libcudart.so.10.0
@@ -59,6 +48,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 #     && cd .. \
 #     && rm -rf vision
 
-COPY test_pytorch.py /tmp/
+# tensor flow dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libhdf5-serial-dev \
+        hdf5-tools \
+        libhdf5-dev \
+        zlib1g-dev \
+        zip \
+        libjpeg8-dev \
+    && rm -rf /var/lib/apt/lists/*
+RUN pip3 install grpcio absl-py py-cpuinfo psutil portpicker six mock requests gast h5py astor termcolor protobuf keras-applications keras-preprocessing wrapt google-pasta
+
+RUN pip3 install --pre --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v42 tensorflow-gpu
+
+# RUN apt-get update && apt-get install -y --no-install-recommends \
+#         python3-keras \
+#     && rm -rf /var/lib/apt/lists/*
+
+COPY test_env.py /
 
 RUN [ "cross-build-end" ]
