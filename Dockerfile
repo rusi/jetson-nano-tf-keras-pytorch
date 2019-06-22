@@ -21,14 +21,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         bash-completion \
         net-tools \
         build-essential \
+        pkg-config \
         python3-pip \
         python3-setuptools \
         python3-wheel \
         python3-dev \
         python3-venv \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-numpy \
         python3-scipy \
-        pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 # install pytorch 1.1.0
