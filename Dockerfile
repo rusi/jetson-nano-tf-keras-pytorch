@@ -60,9 +60,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         libjpeg8-dev \
     && rm -rf /var/lib/apt/lists/*
-RUN pip3 install grpcio absl-py py-cpuinfo psutil portpicker six mock requests gast h5py astor termcolor protobuf keras-applications keras-preprocessing wrapt google-pasta
 
-RUN pip3 install --pre --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v42 tensorflow-gpu
+# RUN pip3 install grpcio absl-py py-cpuinfo psutil portpicker six mock requests gast h5py astor termcolor protobuf keras-applications keras-preprocessing wrapt google-pasta
+
+ARG TENSORFLOW_WHL=tensorflow_gpu-1.13.1+nv19.5-cp36-cp36m-linux_aarch64.whl
+RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-gpu/${TENSORFLOW_WHL} -O /tmp/${TENSORFLOW_WHL} \
+    && pip3 install /tmp/${TENSORFLOW_WHL} \
+    && rm /tmp/${TENSORFLOW_WHL}
 
 # RUN apt-get update && apt-get install -y --no-install-recommends \
 #         python3-keras \
