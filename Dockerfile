@@ -34,6 +34,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-scipy \
     && rm -rf /var/lib/apt/lists/*
 
+ENV PYTHONUNBUFFERED 1
+
+RUN pip3 install --upgrade setuptools wheel pip
+
 # install pytorch 1.1.0
 # https://devtalk.nvidia.com/default/topic/1049071/jetson-nano/pytorch-for-jetson-nano/
 # https://github.com/pytorch/pytorch/blob/master/README.md#nvidia-jetson-platforms
@@ -43,7 +47,7 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
     && rm /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl
 
 # torchvision
-# TODO: needs libcudart.so.10.0
+# TODO: needs libcudart.so.10.0 to compile torchvision
 # RUN cd /tmp \ 
 #     && git clone https://github.com/pytorch/vision \
 #     && cd vision \
@@ -51,6 +55,8 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
 #     && cd .. \
 #     && rm -rf vision
 
+# installing tensorflow
+# https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html
 # tensor flow dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libhdf5-serial-dev \
@@ -61,16 +67,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libjpeg8-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# RUN pip3 install grpcio absl-py py-cpuinfo psutil portpicker six mock requests gast h5py astor termcolor protobuf keras-applications keras-preprocessing wrapt google-pasta
-
+RUN pip3 install -vvv \
+    astor gast six grpcio wheel \
+    protobuf tensorflow_estimator \
+    absl-py tensorboard h5py \
+    keras-applications keras-preprocessing \
+    py-cpuinfo psutil portpicker mock requests termcolor wrapt google-pasta
+# https://devtalk.nvidia.com/default/topic/1048776/official-tensorflow-for-jetson-nano-/
 ARG TENSORFLOW_WHL=tensorflow_gpu-1.13.1+nv19.5-cp36-cp36m-linux_aarch64.whl
 RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-gpu/${TENSORFLOW_WHL} -O /tmp/${TENSORFLOW_WHL} \
     && pip3 install /tmp/${TENSORFLOW_WHL} \
     && rm /tmp/${TENSORFLOW_WHL}
 
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#         python3-keras \
-#     && rm -rf /var/lib/apt/lists/*
+# install keras
+RUN pip3 install scikit-learn pillow
+RUN pip3 install keras
 
 COPY test_env.py /
 
