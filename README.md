@@ -1,13 +1,19 @@
 # TensorFlow, Keras, PyTorch docker container for Jetson Nano
 
-To run ARM containers on Ubuntu:
+To use this container:
 ```
-sudo apt install qemu-user-static
-docker run -it --rm -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static arm64v8/ubuntu uname -a
+$ docker run --rm -it rusi/jetson-nano-tf-keras-pytorch uname -a
 ```
 
-To run this container:
+To build on `x86_64` need to install `qemu-user-static`:
 ```
-docker build . -t jetson-nano-tf-keras-pytorch
-docker run --rm -it jetson-nano-tf-keras-pytorch uname -a
+$ sudo apt install qemu-user-static
+# to test:
+$ docker run -it --rm -v /usr/bin/qemu-aarch64-static:/usr/bin/qemu-aarch64-static arm64v8/ubuntu uname -a
+```
+
+To build and run this container locally:
+```
+$ docker build . -t jetson-nano-tf-keras-pytorch
+$ docker run --rm -it jetson-nano-tf-keras-pytorch uname -a
 ```
