@@ -47,12 +47,15 @@ RUN pip3 install --upgrade setuptools wheel pip
 RUN pip3 install grpcio
 # install newer numpy... the python3-numpy package is 0xb, whereas pytorch is compiled against 0xc
 RUN pip3 install --upgrade numpy
+# ... and so does the libraries below (i.e. they take a while to build)
+RUN pip3 install h5py
+RUN pip3 install pandas
 
 # install tensorflow dependencies
 RUN pip3 install \
     astor gast six \
     protobuf tensorflow_estimator \
-    absl-py tensorboard h5py \
+    absl-py tensorboard \
     keras-applications keras-preprocessing \
     py-cpuinfo psutil portpicker mock requests termcolor wrapt google-pasta \
     pillow
@@ -63,11 +66,20 @@ RUN pip3 install \
     docopt \
     tornado \
     moviepy \
-    pandas \
     greenlet \
     proglog \
     imageio-ffmpeg \
-    MarkupSafe
+    MarkupSafe \
+    python-engineio \
+    python-socketio \
+    click \
+    itsdangerous \
+    Jinja2 \
+    flask \
+    dnspython \
+    monotonic \
+    eventlet
+
 
 # installing tensorflow
 # https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html
