@@ -67,7 +67,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libjpeg8-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install -vvv \
+RUN pip3 install \
     astor gast six grpcio wheel \
     protobuf tensorflow_estimator \
     absl-py tensorboard h5py \
