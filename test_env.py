@@ -1,5 +1,5 @@
 # confirm PyTorch sees the GPU
-from torch
+import torch
 print('Torch Version: ' + str(torch.__version__))
 print('CUDA available: ' + str(torch.cuda.is_available()))
 print('CUDA device name: ' + str(torch.cuda.get_device_name(torch.cuda.current_device())))
