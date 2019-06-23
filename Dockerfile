@@ -80,6 +80,34 @@ RUN pip3 install \
     monotonic \
     eventlet
 
+# opencv
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libopenblas-dev \
+        build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
+        libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
+        libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev \
+        libv4l-dev v4l-utils qv4l2 v4l2ucp \
+    && rm -rf /var/lib/apt/lists/*
+
+# ref: https://jkjung-avt.github.io/opencv-on-nano/
+# ref: https://devtalk.nvidia.com/default/topic/1049972/jetson-nano/opencv-cuda-python-with-jetson-nano/1
+# ref: https://github.com/AastaNV/JEP/blob/master/script/install_opencv4.0.0_Nano.sh
+# ref: https://github.com/jkjung-avt/jetson_nano/blob/master/install_opencv-3.4.6.sh
+ARG OPENCV=3.4.6
+# ARG OPENCV=4.1.0
+# not using these options: -D WITH_QT=ON -D WITH_OPENGL=ON
+RUN wget https://github.com/opencv/opencv/archive/${OPENCV}.tar.gz -O /tmp/opencv-${OPENCV}.tar.gz > /dev/null 2>&1 \
+    && wget https://github.com/opencv/opencv_contrib/archive/${OPENCV}.tar.gz -O /tmp/opencv_contrib-${OPENCV}.tar.gz > /dev/null 2>&1 \
+    && cd /tmp \
+    && tar zxvf opencv-${OPENCV}.tar.gz \
+    && tar zxvf opencv_contrib-${OPENCV}.tar.gz \
+    && cd opencv-${OPENCV}/ \
+    && mkdir build \
+    && cd build/ \
+    && cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_CUDA=ON -D CUDA_ARCH_BIN="5.3" -D CUDA_ARCH_PTX="" -D WITH_CUBLAS=ON -D ENABLE_FAST_MATH=ON -D CUDA_FAST_MATH=ON -D OPENCV_EXTRA_MODULES_PATH=/tmp/opencv_contrib-${OPENCV}/modules -D WITH_GSTREAMER=ON -D ENABLE_NEON=ON -D OPENCV_ENABLE_NONFREE=ON -D WITH_LIBV4L=ON -D BUILD_opencv_python2=OFF -D BUILD_opencv_python3=ON -D BUILD_TESTS=OFF -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF .. \
+    && make -j$(nproc) \
+    && make install \
+    && rm -rf /tmp/opencv*
 
 # installing tensorflow
 # https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html

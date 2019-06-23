@@ -16,3 +16,7 @@ print('Tensor c = ' + str(c))
 import keras
 print('Keras Version: ' + str(keras.__version__))
 assert len(keras.backend.tensorflow_backend._get_available_gpus()) > 0
+
+# test opencv
+import cv2
+print("Python3 cv2 version: %s" % cv2.__version__)
