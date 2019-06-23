@@ -29,14 +29,56 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         python3-venv \
     && rm -rf /var/lib/apt/lists/*
 
+# tensor flow dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        python3-numpy \
-        python3-scipy \
+        libhdf5-serial-dev \
+        hdf5-tools \
+        libhdf5-dev \
+        zlib1g-dev \
+        zip \
+        libjpeg8-dev \
     && rm -rf /var/lib/apt/lists/*
 
 ENV PYTHONUNBUFFERED 1
 
 RUN pip3 install --upgrade setuptools wheel pip
+
+# grpcio takes forever to build... (tensorflow dependency)
+RUN pip3 install grpcio
+# install newer numpy... the python3-numpy package is 0xb, whereas pytorch is compiled against 0xc
+RUN pip3 install --upgrade numpy
+
+# install tensorflow dependencies
+RUN pip3 install \
+    astor gast six \
+    protobuf tensorflow_estimator \
+    absl-py tensorboard h5py \
+    keras-applications keras-preprocessing \
+    py-cpuinfo psutil portpicker mock requests termcolor wrapt google-pasta \
+    pillow
+# RUN pip3 install scikit-learn # fails installing
+
+# install other useful python libraries
+RUN pip3 install \
+    docopt \
+    tornado \
+    moviepy \
+    pandas \
+    greenlet \
+    proglog \
+    imageio-ffmpeg \
+    MarkupSafe
+
+# installing tensorflow
+# https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html
+# https://devtalk.nvidia.com/default/topic/1048776/official-tensorflow-for-jetson-nano-/
+ARG TENSORFLOW_WHL=tensorflow_gpu-1.13.1+nv19.5-cp36-cp36m-linux_aarch64.whl
+RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-gpu/${TENSORFLOW_WHL} -O /tmp/${TENSORFLOW_WHL} > /dev/null 2>&1 \
+    && pip3 install /tmp/${TENSORFLOW_WHL} \
+    && rm /tmp/${TENSORFLOW_WHL}
+
+# install keras
+RUN pip3 install keras
 
 # install pytorch 1.1.0
 # https://devtalk.nvidia.com/default/topic/1049071/jetson-nano/pytorch-for-jetson-nano/
@@ -55,35 +97,20 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
 #     && cd .. \
 #     && rm -rf vision
 
-# installing tensorflow
-# https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html
-# tensor flow dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        libhdf5-serial-dev \
-        hdf5-tools \
-        libhdf5-dev \
-        zlib1g-dev \
-        zip \
-        libjpeg8-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install \
-    astor gast six grpcio wheel \
-    protobuf tensorflow_estimator \
-    absl-py tensorboard h5py \
-    keras-applications keras-preprocessing \
-    py-cpuinfo psutil portpicker mock requests termcolor wrapt google-pasta
-# https://devtalk.nvidia.com/default/topic/1048776/official-tensorflow-for-jetson-nano-/
-ARG TENSORFLOW_WHL=tensorflow_gpu-1.13.1+nv19.5-cp36-cp36m-linux_aarch64.whl
-RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-gpu/${TENSORFLOW_WHL} -O /tmp/${TENSORFLOW_WHL} > /dev/null 2>&1 \
-    && pip3 install /tmp/${TENSORFLOW_WHL} \
-    && rm /tmp/${TENSORFLOW_WHL}
-
-# install keras
-RUN pip3 install pillow
-# RUN pip3 install scikit-learn # fails installing
-RUN pip3 install keras
-
 COPY test_env.py /
+
+# setup docker user
+ARG user=jetson
+ARG group=jetson
+ARG uid=1000
+ARG gid=1000
+ARG home=/home/jetson
+RUN groupadd -g ${gid} ${group} \
+    && useradd -d ${home} -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
+    && echo "${user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/sudoers_${user}
+    # && usermod -aG docker ${user}
+
+USER ${user}
+WORKDIR ${home}
 
 RUN [ "cross-build-end" ]
