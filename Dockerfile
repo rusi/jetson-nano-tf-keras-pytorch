@@ -117,6 +117,8 @@ RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-
     && pip3 install /tmp/${TENSORFLOW_WHL} \
     && rm /tmp/${TENSORFLOW_WHL}
 
+# another long running package
+RUN pip3 install scipy
 # install keras
 RUN pip3 install keras
 
