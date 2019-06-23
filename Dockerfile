@@ -117,8 +117,13 @@ RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-
     && pip3 install /tmp/${TENSORFLOW_WHL} \
     && rm /tmp/${TENSORFLOW_WHL}
 
-# another long running package
-RUN pip3 install scipy
+# keras dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python-pydot python-pydot-ng \
+        graphviz \
+        libatlas-base-dev \
+        python3-scipy \
+    && rm -rf /var/lib/apt/lists/*
 # install keras
 RUN pip3 install keras
 
@@ -142,6 +147,8 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
 COPY test_env.py /
 COPY tegra-cam.py /
 
+RUN [ "cross-build-end" ]
+
 # setup docker user
 ARG user=jetson
 ARG group=jetson
@@ -156,4 +163,3 @@ RUN groupadd -g ${gid} ${group} \
 USER ${user}
 WORKDIR ${home}
 
-RUN [ "cross-build-end" ]
