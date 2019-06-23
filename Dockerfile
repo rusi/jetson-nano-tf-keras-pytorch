@@ -80,7 +80,8 @@ RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-
     && rm /tmp/${TENSORFLOW_WHL}
 
 # install keras
-RUN pip3 install scikit-learn pillow
+RUN pip3 install pillow
+# RUN pip3 install scikit-learn # fails installing
 RUN pip3 install keras
 
 COPY test_env.py /
