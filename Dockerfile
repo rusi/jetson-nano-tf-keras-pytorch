@@ -140,6 +140,7 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
 #     && rm -rf vision
 
 COPY test_env.py /
+COPY tegra-cam.py /
 
 # setup docker user
 ARG user=jetson
