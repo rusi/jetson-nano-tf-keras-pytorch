@@ -85,7 +85,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libopenblas-dev \
         build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev \
         libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
-        libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev \
+        libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libdc1394-22-dev \
         libv4l-dev v4l-utils qv4l2 v4l2ucp \
     && rm -rf /var/lib/apt/lists/*
 
