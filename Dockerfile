@@ -42,7 +42,7 @@ RUN pip3 install --upgrade setuptools wheel pip
 # https://devtalk.nvidia.com/default/topic/1049071/jetson-nano/pytorch-for-jetson-nano/
 # https://github.com/pytorch/pytorch/blob/master/README.md#nvidia-jetson-platforms
 # https://nvidia.box.com/v/torch-stable-cp36-jetson-jp42/
-RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.whl -O /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl \
+RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.whl -O /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl > /dev/null 2>&1 \
     && pip3 install /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl \
     && rm /tmp/torch-1.1.0-cp36-cp36m-linux_aarch64.whl
 
@@ -75,7 +75,7 @@ RUN pip3 install \
     py-cpuinfo psutil portpicker mock requests termcolor wrapt google-pasta
 # https://devtalk.nvidia.com/default/topic/1048776/official-tensorflow-for-jetson-nano-/
 ARG TENSORFLOW_WHL=tensorflow_gpu-1.13.1+nv19.5-cp36-cp36m-linux_aarch64.whl
-RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-gpu/${TENSORFLOW_WHL} -O /tmp/${TENSORFLOW_WHL} \
+RUN wget https://developer.download.nvidia.com/compute/redist/jp/v42/tensorflow-gpu/${TENSORFLOW_WHL} -O /tmp/${TENSORFLOW_WHL} > /dev/null 2>&1 \
     && pip3 install /tmp/${TENSORFLOW_WHL} \
     && rm /tmp/${TENSORFLOW_WHL}
 
