@@ -1,11 +1,48 @@
-# TensorFlow, Keras, PyTorch (and OpenCV) docker container for Jetson Nano
+# TensorFlow, Keras, PyTorch (and OpenCV) Docker container for Jetson Nano
 
-To use this container:
+## Pre-req
+To run this container on Jetson Nano, you need to install `docker-compose`:
 ```
-$ docker run --rm -it rusi/jetson-nano-tf-keras-pytorch
+$ sudo apt update
+$ apt install docker-compose
 ```
 
-To build on `x86_64` need to install `qemu-user-static`:
+Add yourself to the `docker` group:
+```
+$ sudo gpasswd -a $USER docker
+# or
+$ sudo usermod -aG docker $USER
+```
+and reboot (or logout/login) and test:
+```
+$ docker ps
+```
+
+## Use
+To run this container (on Jetson Nano):
+```
+$ git clone https://github.com/rusi/jetson-nano-tf-keras-pytorch.git
+$ cd jetson-nano-tf-keras-pytorch
+$ docker-compose run --rm jetson
+```
+
+## Test
+To test TensorFlow, Keras, and OpenCV installation:
+```
+$ docker-compose run --rm jetson
+jetson$ cd /opt/tools
+jetson$ python3 tf-cuda-test.py
+```
+
+To test CSI / RPi2 Camera:
+```
+$ docker-compose run --rm jetson
+jetson$ cd /opt/tools
+jetson$ ./cam-test.sh
+```
+
+## Build
+To build on `x86_64`, you need to install `qemu-user-static`:
 ```
 $ sudo apt install qemu-user-static
 # to test:

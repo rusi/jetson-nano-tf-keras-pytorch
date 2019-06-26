@@ -1,0 +1,46 @@
+version: '3.4'
+services:
+    jetson:
+        image: rusi/jetson-nano-tf-keras-pytorch
+        build:
+            context: .
+            dockerfile: Dockerfile
+            network: host
+        container_name: jetson
+        privileged: true
+        ipc: host
+        network_mode: "host"
+        stdin_open: true
+        tty: true
+        volumes:
+            - /etc/ld.so.conf.d:/etc/ld.so.conf.d:ro
+            - /etc/alternatives:/etc/alternatives:ro
+            - /usr/local/cuda-10.0:/usr/local/cuda-10.0:ro
+            - /usr/lib/aarch64-linux-gnu/libcudnn.so.7.3.1:/usr/lib/aarch64-linux-gnu/libcudnn.so.7.3.1:ro
+            - /usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0:/usr/lib/aarch64-linux-gnu/libnuma.so.1.0.0:ro
+            - /usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/tegra:ro
+            - /usr/lib/aarch64-linux-gnu/tegra-egl:/usr/lib/aarch64-linux-gnu/tegra-egl:ro
+            - /usr/lib/aarch64-linux-gnu/gstreamer-1.0/:/usr/lib/aarch64-linux-gnu/gstreamer-1.0/:ro
+            - /usr/lib/aarch64-linux-gnu/libgstnvivameta.so:/usr/lib/aarch64-linux-gnu/libgstnvivameta.so:ro
+            - /usr/lib/aarch64-linux-gnu/libavfilter.so.6.107.100:/usr/lib/aarch64-linux-gnu/libavfilter.so.6.107.100:ro
+            - /usr/lib/aarch64-linux-gnu/libgstnvegl-1.0.so.0:/usr/lib/aarch64-linux-gnu/libgstnvegl-1.0.so.0:ro
+            - /usr/lib/aarch64-linux-gnu/libgstnvexifmeta.so:/usr/lib/aarch64-linux-gnu/libgstnvexifmeta.so:ro
+            - /usr/lib/aarch64-linux-gnu/libLLVM-6.0.so.1:/usr/lib/aarch64-linux-gnu/libLLVM-6.0.so.1:ro
+            - /usr/share/glvnd/egl_vendor.d/10_nvidia.json:/usr/share/glvnd/egl_vendor.d/10_nvidia.json:ro
+            # X11
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            # - $XAUTHORITY:$XAUTHORITY
+            # - /run/user/1000/:/run/user/1000/:rw
+            # - /tmp/camsock:/tmp/camsock:rw
+            # - /tmp/argus_socket:/tmp/argus_socket:rw
+            # - /tmp/nvscsock:/tmp/nvscsock:rw
+            # dbus
+            # - /run/user/1000/bus:/run/user/1000/bus:rw
+            # - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw
+        environment:
+            TERM: xterm-256color
+            DISPLAY: :0
+            # XAUTHORITY: $XAUTHORITY
+            # QT_X11_NO_MITSHM: 1
+            # DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"
+            # DBUS_SESSION_BUS_ADDRESS: $DBUS_SESSION_BUS_ADDRESS
