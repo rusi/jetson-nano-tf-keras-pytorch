@@ -144,8 +144,18 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
 #     && cd .. \
 #     && rm -rf vision
 
-COPY test_env.py /
-COPY tegra-cam.py /
+# additional tools & libraries
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libblas3 liblapack3 \
+        gstreamer1.0-tools \
+        gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-gl \
+        libclutter-1.0-0 libclutter-gst-3.0-0 libavresample3 libpostproc54 libzmq5 librubberband2 libmysofa0 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir /opt/tools
+COPY cam-test.sh /opt/tools/
+COPY tf-cuda-test.py /opt/tools/
+COPY tegra-cam.py /opt/tools/
 
 RUN [ "cross-build-end" ]
 
@@ -157,9 +167,13 @@ ARG gid=1000
 ARG home=/home/jetson
 RUN groupadd -g ${gid} ${group} \
     && useradd -d ${home} -u ${uid} -g ${gid} -m -s /bin/bash ${user} \
-    && echo "${user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/sudoers_${user}
+    && echo "${user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/sudoers_${user} \
+    && addgroup --gid 108 i2c \
+    && usermod -a -G i2c ${user} \
+    && usermod -a -G video ${user}
     # && usermod -aG docker ${user}
+
+RUN cd /usr/local && ln -s cuda-10.0 cuda
 
 USER ${user}
 WORKDIR ${home}
-
