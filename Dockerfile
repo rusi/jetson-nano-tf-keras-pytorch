@@ -152,11 +152,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libclutter-1.0-0 libclutter-gst-3.0-0 libavresample3 libpostproc54 libzmq5 librubberband2 libmysofa0 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir /opt/tools
 COPY cam-test.sh /opt/tools/
 COPY tf-cuda-test.py /opt/tools/
 COPY tegra-cam.py /opt/tools/
 
+COPY entrypoint.sh /
 RUN [ "cross-build-end" ]
 
 # setup docker user
@@ -177,3 +177,6 @@ RUN cd /usr/local && ln -s cuda-10.0 cuda
 
 USER ${user}
 WORKDIR ${home}
+
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD [ "/bin/bash" ]

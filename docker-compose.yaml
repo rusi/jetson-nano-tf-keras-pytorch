@@ -2,10 +2,6 @@ version: '3.4'
 services:
     jetson:
         image: rusi/jetson-nano-tf-keras-pytorch
-        build:
-            context: .
-            dockerfile: Dockerfile
-            network: host
         container_name: jetson
         privileged: true
         ipc: host
@@ -27,19 +23,19 @@ services:
             - /usr/lib/aarch64-linux-gnu/libgstnvexifmeta.so:/usr/lib/aarch64-linux-gnu/libgstnvexifmeta.so:ro
             - /usr/lib/aarch64-linux-gnu/libLLVM-6.0.so.1:/usr/lib/aarch64-linux-gnu/libLLVM-6.0.so.1:ro
             - /usr/share/glvnd/egl_vendor.d/10_nvidia.json:/usr/share/glvnd/egl_vendor.d/10_nvidia.json:ro
-            # X11
+            # X11 & Cam
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /tmp/camsock:/tmp/camsock:rw
+            - /tmp/argus_socket:/tmp/argus_socket:rw
+            - /tmp/nvscsock:/tmp/nvscsock:rw
             # - $XAUTHORITY:$XAUTHORITY
             # - /run/user/1000/:/run/user/1000/:rw
-            # - /tmp/camsock:/tmp/camsock:rw
-            # - /tmp/argus_socket:/tmp/argus_socket:rw
-            # - /tmp/nvscsock:/tmp/nvscsock:rw
             # dbus
             # - /run/user/1000/bus:/run/user/1000/bus:rw
             # - /run/dbus/system_bus_socket:/run/dbus/system_bus_socket:rw
         environment:
             TERM: xterm-256color
-            DISPLAY: :0
+            DISPLAY: $DISPLAY
             # XAUTHORITY: $XAUTHORITY
             # QT_X11_NO_MITSHM: 1
             # DBUS_SESSION_BUS_ADDRESS: "unix:path=/run/user/1000/bus"

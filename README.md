@@ -4,7 +4,7 @@
 To run this container on Jetson Nano, you need to install `docker-compose`:
 ```
 $ sudo apt update
-$ apt install docker-compose
+$ sudo apt install docker-compose
 ```
 
 Add yourself to the `docker` group:
@@ -29,16 +29,12 @@ $ docker-compose run --rm jetson
 ## Test
 To test TensorFlow, Keras, and OpenCV installation:
 ```
-$ docker-compose run --rm jetson
-jetson$ cd /opt/tools
-jetson$ python3 tf-cuda-test.py
+$ docker-compose run --rm jetson python3 /opt/tools/tf-cuda-test.py
 ```
 
 To test CSI / RPi2 Camera:
 ```
-$ docker-compose run --rm jetson
-jetson$ cd /opt/tools
-jetson$ ./cam-test.sh
+$ docker-compose run --rm jetson /opt/tools/cam-test.sh
 ```
 
 ## Build
