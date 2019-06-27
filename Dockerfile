@@ -147,7 +147,7 @@ RUN wget https://nvidia.box.com/shared/static/j2dn48btaxosqp0zremqqm8pjelriyvs.w
 # additional tools & libraries
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libblas3 liblapack3 \
-        gstreamer1.0-tools \
+        gstreamer1.0-tools libxv1 \
         gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-gl \
         libclutter-1.0-0 libclutter-gst-3.0-0 libavresample3 libpostproc54 libzmq5 librubberband2 libmysofa0 \
     && rm -rf /var/lib/apt/lists/*
@@ -170,6 +170,8 @@ RUN groupadd -g ${gid} ${group} \
     && echo "${user} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/sudoers_${user} \
     && addgroup --gid 108 i2c \
     && usermod -a -G i2c ${user} \
+    && addgroup --gid 104 input \
+    && usermod -a -G input ${user} \
     && usermod -a -G video ${user}
     # && usermod -aG docker ${user}
 
