@@ -150,6 +150,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         gstreamer1.0-tools libxv1 \
         gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly gstreamer1.0-gl \
         libclutter-1.0-0 libclutter-gst-3.0-0 libavresample3 libpostproc54 libzmq5 librubberband2 libmysofa0 \
+        ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 COPY cam-test.sh /opt/tools/
