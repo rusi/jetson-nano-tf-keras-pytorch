@@ -59,7 +59,7 @@ RUN pip3 install \
     keras-applications keras-preprocessing \
     py-cpuinfo psutil portpicker mock requests termcolor wrapt google-pasta \
     pillow
-# RUN pip3 install scikit-learn # fails installing
+# RUN pip3 install scikit-learn # fails installing (installed as last layer)
 
 # install other useful python libraries
 RUN pip3 install \
@@ -152,6 +152,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libclutter-1.0-0 libclutter-gst-3.0-0 libavresample3 libpostproc54 libzmq5 librubberband2 libmysofa0 \
         ffmpeg \
     && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install Cython
+RUN pip3 install scikit-learn
 
 COPY cam-test.sh /opt/tools/
 COPY tf-cuda-test.py /opt/tools/
